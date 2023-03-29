@@ -8,8 +8,9 @@ Features
 - Firestore database of messages, additional user details. (Realtime updating of database values through intuitive controls within the application)
 - Find other people by their usernames, then add them as a friend, or immediately start a conversation.
 - Keep track of your connections, and approve or reject incoming friend requests.
+- Chat group creation (Admins can perform CRUD operations on the group)
+- Status updates
+
 
 TBA
-- Chat group creation
-- Status updates
 - Fixes to iPhones with focus on keyboard allowing page scrolling
