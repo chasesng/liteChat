@@ -1,11 +1,11 @@
 <template>
      <div style="position:fixed;top:0;z-index:1">
     <div style="height:7vh;width:100vw;opacity:1;background-color:rgba(42,48,109,255)">
-        <router-link
-          style="float:left;width:30%;height:inherit;margin-top:2.2vh;text-align:left;margin-left:3vw;opacity:.7" to="/"
+        <div
+          style="float:left;width:30%;height:inherit;margin-top:2.2vh;text-align:left;margin-left:3vw;opacity:.7" onclick="history.back()"
           class="ft p7 wt b">
           <p>Back</p>
-        </router-link>
+        </div>
         
     </div>
   </div>
@@ -20,15 +20,15 @@
                 <br />
                 <div class="f" style="justify-content:center;width:100vw">
                     <label class="wt" style="width:30%">Username</label>
-                    <p class="wt" style="width:30%;text-align:left">{{ user.username }}</p>
+                    <p class="wt p9" style="width:30%;text-align:left">{{ user.username }}</p>
                 </div>
                 <div class="f" style="justify-content:center;width:100vw">
                     <label class="wt" style="width:30%">Email</label>
-                    <p class="wt" style="width:30%;text-align:left">{{ user.email }}</p>
+                    <p class="wt p9" style="width:30%;text-align:left">{{ user.email }}</p>
                 </div>
                 <div class="f" style="justify-content:center;width:100vw">
                     <label class="wt" style="width:30%">Status</label>
-                    <p class="wt" style="width:30%;text-align:left">{{ user.status }}</p>
+                    <p class="wt p9" style="width:30%;text-align:left">{{ user.status }}</p>
                 </div>
                 <div class="f" style="padding-top:1vh;width:100vw;justify-content:center;gap: 20vw;" v-if="usID != user.userID">
                     <div v-if="checkUserFriendsList(usID, user.id)">

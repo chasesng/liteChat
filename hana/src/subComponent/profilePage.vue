@@ -4,7 +4,8 @@
             <p class="wt ft p6"></p>
         </div>
         <div style="overflow-x:hidden;overflow-y:scroll;width:90vw" class="cntr">
-            <div v-for="(user, index) in users.filter(user => user.userID === usID)" :key="index" class="wt animate__animated animate__slideInLeft" style="animation-duration: .2s;">
+            <div v-for="(user, index) in users.filter(user => user.userID === usID)" :key="index"
+                class="wt animate__animated animate__slideInLeft" style="animation-duration: .2s;">
                 <div class="f">
                     <label clas="wt ft l p7" style="padding-right:10vw">Username</label>
                     <input type="text" v-model="user.username" class="inpClear ft wt l" style="width:30vw;opacity:.8">
@@ -19,22 +20,27 @@
                     <p class="wt ft l p8" @click="toggleFriendsDisplay()">{{ getFriendsCount(usID) }} Connections</p>
                 </div>
 
-                <div v-if="isLoggedin" @click="handleSignOut(),go('/Login')" style="color:lightskyblue;text-align:right">Logout</div>
+                <div v-if="isLoggedin" @click="handleSignOut(), go('/Login')" style="color:lightskyblue;text-align:right">
+                    Logout</div>
                 <div style="text-align:left">
-                <p class="wt ft p7 mt25 l">Notifications</p>
-                    <div class="divider" style="text-align: left;width:100vw;background-color:gray;filter:opacity:.8;color:white;height:3.5vh;padding-left:1vw">Received Add Requests</div>
+                    <p class="wt ft p7 mt25 l">Notifications</p>
+                    <div class="divider"
+                        style="text-align: left;width:100vw;background-color:gray;filter:opacity:.8;color:white;height:3.5vh;padding-left:1vw">
+                        Received Add Requests</div>
                 </div>
-                <div class="cntr" style="width:inherit;overflow-x:hidden;overflow-y:scroll;height:42vh;padding-right:10vw;text-align:left">
-                    
+                <div class="cntr"
+                    style="width:inherit;overflow-x:hidden;overflow-y:scroll;height:42vh;padding-right:10vw;text-align:left">
+
                     <div v-for="(req, index) in displayRequests(usID)" :key="index">
-                    <div class="ib" style="background-color:rgba(128,128,128,.05);border-radius:5px;width:100vw;height:fit-content;border-bottom:1px solid gray;margin-bottom:5%">
-                    <p class="wt pd5 p7 l" style="width:100%">{{ req.username }}</p>
-                    <p class="pd5 p8 l" style="width:100%;margin-top:-3.5vh;color:gainsboro">{{ req.status }}</p>
-                    <div class="f" style="padding-bottom:3%">
-                        <button class="optionButton ft l" @click="addFriend(usID, req.id)">Accept</button>
-                        <button class="optionButton ft l" @click="removeFromID(usID, req.id)">Remove</button>
-                    </div>
-                    </div>
+                        <div class="ib"
+                            style="background-color:rgba(128,128,128,.05);border-radius:5px;width:100vw;height:fit-content;border-bottom:1px solid gray;margin-bottom:5%">
+                            <p class="wt pd5 p7 l" style="width:100%">{{ req.username }}</p>
+                            <p class="pd5 p8 l" style="width:100%;margin-top:-3.5vh;color:gainsboro">{{ req.status }}</p>
+                            <div class="f" style="padding-bottom:3%">
+                                <button class="optionButton ft l" @click="addFriend(usID, req.id)">Accept</button>
+                                <button class="optionButton ft l" @click="removeFromID(usID, req.id)">Remove</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -42,29 +48,30 @@
             </div>
         </div>
 
-        <div id="toggleFriends" :style="{ display: toggleFriends}" style="position:absolute;top:10vh;width:100vw;height:60vh;background-color:white;filter:brightness(1);border-radius:5px;animation-duration:.2s;overflow:hidden" class="animate__animated animate__fadeIn">
+        <div id="toggleFriends" :style="{ display: toggleFriends }"
+            style="position:absolute;top:10vh;width:100vw;height:60vh;background-color:white;overflow:hidden;filter:brightness(1);border-radius:5px;animation-duration:.2s"
+            class="animate__animated animate__fadeIn">
             <div class="f" style="justify-content: space-between;">
-            <p class="p6" style="color:gray;margin-bottom:-3%;padding:5px">Friends</p>
-            <p class="p6" style="color:gray;margin-bottom:-3%;padding:5px" @click="toggleFriendsDisplay()">Close</p>
-        </div>
-            <hr/>
-            <div class="ib" style="overflow-y:scroll">
-                <div v-for="(user,index) in users.filter(user => user.userID === usID)" :key="index">
-                    <div v-for="(friend, index) in user.friends" :key="index" style="height:7vh;width:100vw;background-color:rgba(128,128,128,.1);text-align:left;padding-left:3vw;border-bottom:1px solid black">
+                <p class="p6" style="color:gray;margin-bottom:-3%;padding:5px">Friends</p>
+                <p class="p6" style="color:gray;margin-bottom:-3%;padding:5px" @click="toggleFriendsDisplay()">Close</p>
+            </div>
+            <hr />
+            <div class="ib" style="width:100vw;height:50vh;overflow:scroll">
+                <div v-for="(user, index) in users.filter(user => user.userID === usID)" :key="index">
+                    <div v-for="(friend, index) in user.friends" :key="index"
+                        style="height:fit-content;width:100vw;background-color:rgba(128,128,128,.1);text-align:left;padding-left:3vw;border-bottom:1px solid black">
                         <router-link :to="'/userProfile/' + getEachUSName(friend)[1]" style="line-height:.3">
-                        <p class="b p8" style="padding-top:4%">{{ getEachUSName(friend)[0] }}</p>
-                        <p class="p8" style="color:gray">View Profile</p>
+                            <p class="b p8" style="padding-top:4%">{{ getEachUSName(friend)[0] }}</p>
+                            <p class="p8" style="color:gray">View Profile</p>
 
                         </router-link>
-                    
+
                     </div>
                 </div>
 
             </div>
         </div>
     </div>
-
-   
 </template>
 
 
@@ -154,10 +161,10 @@ export default {
 
     methods: {
         go(val) {
-            this.$router.push({ path: val})
+            this.$router.push({ path: val })
         },
         getFriendsCount(userID) {
-            for (let i = 0 ; i < this.users.length; i ++) {
+            for (let i = 0; i < this.users.length; i++) {
                 if (this.users[i].userID === userID) {
                     return this.users[i].friends.length
                 }
@@ -168,28 +175,28 @@ export default {
             this.toggleFriends = this.toggleFriends === 'none' ? 'block' : 'none';
         },
         addFriend(userID, targetID) {
-            
-            for (let i = 0 ; i < this.users.length; i ++) {
+
+            for (let i = 0; i < this.users.length; i++) {
                 if (this.users[i].userID === userID) {
                     updateDoc(doc(db, 'users', this.users[i].id), {
                         friends: arrayUnion(String(targetID))
-                    }) 
+                    })
 
                     updateDoc(doc(db, 'users', targetID), {
                         requestSent: arrayRemove(String(this.users[i].userID)),
                         friends: arrayUnion(String(this.users[i].id))
-            })
+                    })
                 }
             }
-            
+
         },
 
         removeFromID(userID, targetID) {
             updateDoc(doc(db, 'users', targetID), {
                 requestSent: arrayRemove(String(userID))
-            }) 
+            })
         },
-       
+
         updateProf: function (id) {
             updateDoc(doc(db, 'users', id), {
                 username: this.$refs.username.value,
@@ -200,9 +207,9 @@ export default {
         },
         displayRequests(currentUserID) {
             var arr = []
-            for (let i = 0 ; i < this.users.length; i++) {
+            for (let i = 0; i < this.users.length; i++) {
                 if (this.users[i].userID != currentUserID && String(this.users[i].requestSent).split(',').includes(currentUserID)) {
-                    arr.push(this.users[i]) 
+                    arr.push(this.users[i])
                 }
             }
             return arr
@@ -210,11 +217,11 @@ export default {
 
         getEachUSName(val) { //takes in id of friends
             var arr = [];
-            for (let i = 0 ; i < this.users.length; i++) {
-                if (this.users[i].id === val) {      
-                    arr.push(this.users[i].username, this.users[i].userID)                                
+            for (let i = 0; i < this.users.length; i++) {
+                if (this.users[i].id === val) {
+                    arr.push(this.users[i].username, this.users[i].userID)
                 }
-                
+
             }
             return arr;
         }
@@ -230,7 +237,7 @@ export default {
 }
 
 div::-webkit-scrollbar {
-  width: 0 !important;
+    width: 0 !important;
 }
 
 .profileContainer {
@@ -280,15 +287,14 @@ select option {
 }
 
 .optionButton {
-    border-radius:5px;
-    color:black;
-    margin-right:5vw;
+    border-radius: 5px;
+    color: black;
+    margin-right: 5vw;
 }
 
 .optionButton:active {
-    background-color:gray;
-    color:white;
-    transform:scale(1.05);
+    background-color: gray;
+    color: white;
+    transform: scale(1.05);
     transition: scale .3s
-}
-</style>
+}</style>

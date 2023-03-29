@@ -25,7 +25,7 @@
                     </div>
                     <div class="pd5">
                         <div v-for="(option, index) in qnsControl" :key="index" class="ibn l p8 "
-                            style="height:fit-content;text-align: leibn;">
+                            style="height:fit-content">
                             <label :id="'Q' + question.id + '_Option_' + question.options[index]" class="cntr br10 optEa wt"
                                 v-if="question.options[index] != null"
                                 style="text-align:center;height:33px;width:50%;margin-bottom:2%;border:1px solid white">{{

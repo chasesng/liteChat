@@ -1,8 +1,8 @@
 <template>
     <br/>
-    <div class="ib bs sb wtbg animate__animated animate__fadeIn" style="width:25%;">
+    <div class="ib wt animate__animated animate__fadeIn" style="width:100vw;height:84vh">
         <div class="w100" style="overflow:hidden">
-            <img id = "logo"  src="../assets/icons/OmniumLogo_Default.png" style="vertical-align: middle;max-height:100%;max-width:100% ; width:100%;height:100%"/>
+            <img id = "logo"  src="../assets/icons/talkUp.jpeg" style="vertical-align: middle;max-height:30%;max-width:40% ; width:100%;height:100%;border-radius:30px"/>
         </div>
   <p class="ft l p9 mt50">Forgot or changing your password? Enter the email you used to sign up to the website to reset the password.</p>
         <p class="ft l mt10 p9">We will send you a recovery email if the email exists for an account.</p>

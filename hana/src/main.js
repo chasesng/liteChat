@@ -48,6 +48,8 @@ import addReco from './components/addRecommendation'
 import chatPage from './components/chatPage'
 import searchPage from './components/findUsername'
 import friendList from './subComponent/friendList'
+import groupSecond from './subComponent/groupSecondary'
+import groupDetails from './subComponent/groupDetails'
 import userProfile from './subComponent/userProfile'
 
 
@@ -93,6 +95,10 @@ const router = createRouter({
     {path: "/userProfile/:ProfileID", component: userProfile, props:true},
     {path: "/Search", component: searchPage},
     {path: "/Friends", component: friendList},
+    {path: "/Group", component: groupSecond},
+    {path: "/viewGroup/:groupID", component: groupDetails, props:true},
+
+
 
 
 
@@ -126,8 +132,8 @@ router.beforeEach(async (to, from, next) => {
     if (await getCurrentUser()) {
       next();
     } else {
-      alert ("Please create an account first");
-      next("/register");
+      alert ("Please Login First");
+      next("/Login");
     }
   } else {
     next();

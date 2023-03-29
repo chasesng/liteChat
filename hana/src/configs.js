@@ -137,3 +137,25 @@ export function truncateString (str) {
 export function go (val) {
   this.$router.push({ path: val})
 }
+
+export function getEachUSName(val) { //takes in id of friends
+  var arr = [];
+  for (let i = 0 ; i < this.users.length; i++) {
+      if (this.users[i].id === val) {      
+          arr.push(this.users[i].username, this.users[i].userID)                                
+      }
+      
+  }
+  return arr;
+}
+
+export function getEachNameid(val) { //takes in id of friends
+  var arr = [];
+  for (let i = 0 ; i < this.users.length; i++) {
+      if (this.users[i].userID === val) {      
+          arr.push(this.users[i].username, this.users[i].userID)                                
+      }
+      
+  }
+  return arr;
+}

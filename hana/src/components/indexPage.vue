@@ -1,19 +1,28 @@
 
 <template style="width:100vw;">
   <br />
-
-  <p class="wt p5" style="margin-top:5vh">Lite Chat</p>
+  <p class="wt p5" style="margin-top:5vh;font-family:'ade'">Lite Chat</p>
   <p class="wt p8" style="float:left;margin-left:2%;opacity:.5">Viewing All Chats</p>
- 
-  <div v-for="(chat, index) in chats.filter(chat => String(chat.participants).split(',').includes(usID)).sort((a, b) => b.timeUpdated - a.timeUpdated)" :key="index">
+  <div style="width:100vw;height:45vh;overflow:scroll">
+  <div v-for="(chat, index) in chats.filter(chat => String(chat.participants).split(',').includes(usID) || String(chat.participants).split(',').includes(getAccID(usID))).sort((a, b) => b.timeUpdated - a.timeUpdated)" :key="index">
     <router-link :to="'/chatPage/' + chat.id"  class="wtbg f animate__animated animate__slideInDown"
       style="width:100vw;height:11vh;margin-bottom:2%;background-color:rgba(33, 33, 45, 0.8);border-bottom:.5px solid gray;animation-duration:0.3s;background-color:rgba(128,128,128,.05);border-radius:5px">
-        <div class="ib" style="width:70vw;height:100%">
+        <div class="ib" style="width:70vw;height:100%" v-if="chat.chatType === 'Private'">
             <div v-for="(participant, participantId) in chat.participants.filter(participant => participant != usID)" :key="participantId" class="f">
             <p v-for="(p, pID) in users.filter(p => p.userID === participant)" :key="pID" class="wt ft l" style="float:left;padding:6px;margin-left:2%;margin-bottom:-3%">
             {{ p.username }}
             </p> 
           </div>
+        <div style="width:50vw;height:30%;overflow:hidden">
+          <p class="ft p8 l" style="float:left;text-align:left;margin-left:1.5vw;padding:6px;color:whitesmoke;filter:opacity(.5)">{{ truncateString(chat.latestMessage) }}</p>
+        </div>
+
+      </div>
+
+      <div class="ib" style="width:70vw;height:100%;" v-if="chat.chatType === 'Group'">
+            <p class="wt ft l" style="float:left;padding:6px;margin-left:2%;margin-bottom:-3%;text-align:left;width:100%;color:green">
+            {{  chat.groupName }}
+            </p> 
         <div style="width:50vw;height:30%;overflow:hidden">
           <p class="ft p8 l" style="float:left;text-align:left;margin-left:1.5vw;padding:6px;color:whitesmoke;filter:opacity(.5)">{{ truncateString(chat.latestMessage) }}</p>
         </div>
@@ -26,6 +35,7 @@
       </div>
     </router-link>
   </div>
+</div>
   <div style="width:100vw;height:25vh"></div>
 
 
@@ -53,6 +63,21 @@
     <a href="https://github.com/chasesng">My github</a>
     <p class="wt p8 mt10">This is part of my 'app a day for a week' personal project. Contact me for features you want
       added to this site if any.</p>
+      <details class="wt l ft p8">
+        <summary>Version Updates</summary>
+        <details>
+          <summary>Version 1.0 (27/03/2023)</summary>
+          <p>- Published Litechat</p>
+            
+          <br/>
+        </details>
+        <details>
+          <summary>Version 1.1 (29/03/2023)</summary>
+          <p>- Added group create function</p>
+          <p>- Adjusted width settings of different classes</p>
+          <p>- Smoothened user flow and allowed for more intuitive navigation</p>
+        </details>
+      </details>
   </div>
   <br />
   
@@ -90,7 +115,15 @@ export default {
         year: 'numeric'
       })
     }
-  }, methods: {
+  }, methods: { 
+
+    getAccID(userID) {
+    for (let i = 0 ; i< this.users.length; i++) {
+        if (this.users[i].userID === userID) {
+          return this.users[i].id
+        }
+      }
+    },
     go(val) {
       this.$router.push({ path: val })
     },
@@ -158,7 +191,8 @@ export default {
           dateCreated: doc.data().dateCreated,
           participants: doc.data().participants,
           latestMessage: doc.data().latestMessage,
-          timeUpdated: doc.data().timeUpdated
+          timeUpdated: doc.data().timeUpdated,
+          groupName: doc.data().groupName
         }
       });
     });
@@ -167,6 +201,7 @@ export default {
     const liveUsers = onSnapshot(userQuery, (snapshot) => {
       this.users = snapshot.docs.map((doc) => {
         return {
+          id: doc.id,
           userID: doc.data().userID,
           username: doc.data().username,
           gender: doc.data().gender,
@@ -175,7 +210,10 @@ export default {
           from: doc.data().from,
           occupation: doc.data().occupation,
           email: doc.data().emailRef,
-          userType: doc.data().userType
+          userType: doc.data().userType,
+          status: doc.data().status,
+          friends: doc.data().friends,
+          requestSent: doc.data().requestSent
 
 
         }
@@ -206,6 +244,7 @@ onMounted(() => {
       isLoggedin.value = true;
       usID.value = user.uid;
       usEmail.value = user.email;
+     
 
     }
     else {
@@ -220,6 +259,7 @@ onMounted(() => {
 
 
 </script>
+
 <style>
 #app {
   -webkit-font-smoothing: antialiased;
@@ -437,4 +477,5 @@ onMounted(() => {
     right: 0;
     left: unset;
   }
-}</style>
+}
+</style>

@@ -9,12 +9,12 @@
         <div class="divider"
             style="width:100vw;height:1vh;background-color:gray;opacity:.3;margin-top:3vh;border-bottom:1px solid white;margin-bottom:2vh">
         </div>
-        <div style="width:inherit;height:4vh;background-color:gray;opacity:.8;text-align:center;color:white;margin-top:-1vh;margin-bottom:2vh"><p>Create a Group</p></div>
+        <router-link to="/Group" style="width:inherit;height:4vh;background-color:gray;opacity:.8;text-align:center;color:white;margin-top:-1vh;margin-bottom:2vh"><p style="color:white">Create a Group</p></router-link>
         <div style="width:100vw;height:67vh;overflow-x:hidden;overflow-y:scroll;color:white;background-color:#2B2B3C">
             <p style="width:100vw;height:3vh;overflow:hidden;display:none" v-if="searchArea">{{ searchArea }}</p>
             <div style="width:100vw;height:60vh" v-if="String(searchArea).length >= 4">
                 <div v-if="users.filter(user => user.username.toLowerCase().includes(String(searchArea).toLowerCase())).length === 0">
-                    <p class="wt ft p8 l" style="margin-top:1%">No users with that username found</p>
+                    <p class="wt ft p8 l" style="margin-top:10%">No users with that username found</p>
                 </div>
                 <div v-for="(user, index) in users.filter(user => user.username.toLowerCase().includes(String(searchArea).toLowerCase()))" :key="index" style="margin-bottom:5%">
                     <router-link class="ib animate__animated animate__slideInLeft"

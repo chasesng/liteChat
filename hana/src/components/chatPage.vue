@@ -1,43 +1,75 @@
 <template>
   <div v-for="(chat, index) in chats.filter(chat => chat.id === chatID)" :key="index"
     style="position:fixed;top:0;z-index:0">
+
+
     <div style="height:7vh;width:100vw;opacity:1;background-color:rgba(42,48,109,255)">
-      <div v-for="(participant, participantId) in chat.participants.filter(participant => participant != usID)"
-        :key="participantId" class="f">
-        <router-link
-          style="float:left;width:30%;height:inherit;margin-top:2.2vh;text-align:left;margin-left:3vw;opacity:.7" to="/"
-          class="ft p7 wt b">
-          <p>Back</p>
-        </router-link>
+      <div v-if="chat.chatType === 'Private'">
+        <div v-for="(participant, participantId) in chat.participants.filter(participant => participant != usID)"
+          :key="participantId" class="f" style="justify-content:space-between">
+          <router-link
+            style="float:left;width:10%;height:inherit;margin-top:2vh;text-align:left;margin-left:3vw;opacity:.7" to="/"
+            class="ft p7 wt b">
+            <p>Back</p>
+          </router-link>
 
-        <p v-for="(p, pID) in users.filter(p => p.userID === participant)" :key="pID" class="wt ft p7 b"
-          style="margin-top:2vh;text-align:center;width:30%;opacity:.8"><span><router-link
-              style="color:white;padding:10px" :to="'/userProfile/' + p.userID">{{ p.username }}</router-link> </span></p>
-        <div style="width:33%;float:right;text-align:right;height:inherit">
-          <p style="color:white;font-size:4vh" @click="toggleDropdown()">≡</p>
-        </div>
-        <div id="confirmAlert" :style="{ display: alertVisible }"
-          style="opacity:.9;position:absolute;top:30vh;left:25vw;width:50vw;height:16vh;background-color:rgba(42,48,109,255);overflow:hidden">
-          <p class="wt ft p8 pd5">Delete Chat</p>
-          <hr style="background-color:white;margin-top:-2.5vh;opacity:.3" />
-          <p class="wt ft p8 l">You cannot undo this!</p>
-          <div class="f" style="justify-content:space-evenly;background-color:white">
+          <p v-for="(p, pID) in users.filter(p => p.userID === participant)" :key="pID" class="wt ft p7 b"
+            style="margin-top:1.5vh;text-align:center;width:60%;opacity:.8;margin-left:-6vw"><span><router-link
+                style="color:white;padding:10px" :to="'/userProfile/' + p.userID">{{ p.username }}</router-link> </span>
+          </p>
+          <div style="width:5%;margin-right:3vw;height:inherit">
+            <p style="color:white;font-size:4vh" @click="toggleDropdown()">≡</p>
+          </div>
+          <div id="confirmAlert" :style="{ display: alertVisible }"
+            style="opacity:.9;position:absolute;top:30vh;left:25vw;width:50vw;height:16vh;background-color:rgba(42,48,109,255);overflow:hidden">
+            <p class="wt ft p8 pd5">Delete Chat</p>
+            <hr style="background-color:white;margin-top:-2.5vh;opacity:.3" />
+            <p class="wt ft p8 l">You cannot undo this!</p>
+            <div class="f" style="justify-content:space-evenly;background-color:white">
 
-            <button class="confirmOptions" @click="clearChat(chat.id)">Confirm </button>
-            <button class="confirmOptions" @click="toggleAlert()">Cancel</button>
+              <button class="confirmOptions" @click="clearChat(chat.id)">Confirm </button>
+              <button class="confirmOptions" @click="toggleAlert()">Cancel</button>
 
+            </div>
           </div>
         </div>
+
       </div>
+
+      <div v-if="chat.chatType === 'Group'">
+        <div class="f" style="justify-content:space-between">
+          <router-link
+            style="float:left;width:10%;height:inherit;margin-top:2.2vh;text-align:left;opacity:.7;margin-left:3vw" to="/"
+            class="ft p7 wt b">
+            <p>Back</p>
+          </router-link>
+          <router-link :to="'/viewGroup/' + chat.id" style="display:inline-block;width:60%">
+            <p class="wt ft p7 b" style="margin-top:1vh;text-align:center;opacity:.8"><span>
+              <div
+                  style="color:white" :to="'/viewGroup/' + chat.id">{{ chat.groupName }}
+                </div> </span>
+            </p>
+            <div class="wt ft p8 l f">
+              <p style="opacity:.3;width:100vw;margin-top:-2.5vh">{{ truncateString(returnChatParticipants(chat.participants)) }}</p>
+            </div>
+          </router-link>
+          <div style="width:5%;height:inherit;margin-right:3vw">
+            <p style="color:white;font-size:4vh"> </p>
+          </div>    
+        </div>
+
+      </div>
+
     </div>
+
   </div>
   <div id="hamburgerDropdown" :style="{ display: dropdownVisible }">
-    <p class="animate__animated animate__slideInDown" style="color:red;animation-duration:.2s;padding-top:.7vh"
+    <p class="animate__animated animate__slideInDown" style="color:red;animation-duration:.2s;padding-top:.3vh"
       @click="toggleAlert()">Delete Chat</p>
   </div>
-  
-  <div class="animate__animated animate__slideInRight"
-  style="animation-duration:0.2s;position:fixed;top:8.5vh;width:100vw;height:100vh;z-index:-1;overflow:hidden;background-color:rgba(33,33,45,255)">
+
+  <div
+    style="position:fixed;top:8.5vh;width:100vw;height:100vh;z-index:-1;overflow:hidden;background-color:rgba(33,33,45,255)">
     <input v-model="usID" ref="userID" style="display:none">
 
 
@@ -50,19 +82,28 @@
         <br />
         <div v-for="(msg, msgId) in chat.chatArea" :key="msgId">
 
-          <div v-if="msg.senderID === usID" style="width:100vw;min-height:3vh;text-align:right;margin-bottom:-4vh">
+          <div v-if="msg.senderID === usID" style="width:100vw;min-height:3vh;text-align:right;margin-bottom:-5vh">
             <p class="ft p8 l pd5 br10 from-me ib"
               style="max-width: 60vw;height:max-content; word-wrap: break-word; word-break: break-word; line-height:1em;margin-right:.5vw;">
-              <span style="float:left;width:fit-content;padding:0px 5px 0px 5px">{{ msg.chatMsg }}</span></p>
-              <p style="font-size:.6em;color:lightgray;margin-top:-2.5vh;margin-right:1vw">{{ timestampChatFormat(msg.timeSent) }}</p>
-            
+              <span style="float:left;width:fit-content;padding:0px 5px 0px 5px">{{ msg.chatMsg }}</span>
+            </p>
+            <p style="font-size:.6em;color:lightgray;margin-top:-2.5vh;margin-right:1vw;opacity:.6">{{
+              timestampChatFormat(msg.timeSent) }}</p>
+
           </div>
-          <div v-if="msg.senderID != usID" style="width:100vw;min-height:3vh;text-align:left;margin-bottom:-4vh">
+
+          <div v-if="msg.senderID != usID" style="width:100vw;min-height:3vh;text-align:left;margin-bottom:-5vh">
+            <div v-if="chat.chatType === 'Group'">
+              <p style="font-size:.8em;color:lightgray;margin-left:1vw;margin-bottom:-.01vh">{{
+                getEachUSNameusID(msg.senderID) }}</p>
+            </div>
             <p class="ft p8 l pd5 br10 from-them ib"
-              style="max-width: 60vw;height:max-content; word-wrap: break-word; word-break: break-word; line-height:1em;margin-left:.5vw;">
-              <span style="float:right;width:fit-content;padding:0px 5px 0px 5px">{{ msg.chatMsg }}</span></p>
-              <p style="font-size:.6em;color:lightgray;margin-top:-2.5vh;margin-left:1vw">{{ timestampChatFormat(msg.timeSent) }}</p>
-            
+            style="max-width: 60vw;height:max-content; word-wrap: break-word; word-break: break-word; line-height:1em;margin-left:.5vw;">
+              <span style="float:left;width:fit-content;padding:0px 5px 0px 5px">{{ msg.chatMsg }}</span>
+            </p>
+            <p style="font-size:.6em;color:lightgray;margin-top:-2.5vh;margin-left:1vw;opacity:.6">{{
+              timestampChatFormat(msg.timeSent) }}</p>
+
           </div>
           <br />
 
@@ -91,7 +132,7 @@ import { onSnapshot, getFirestore, doc, updateDoc, arrayUnion, deleteDoc } from 
 import { onAuthStateChanged, getAuth } from '@firebase/auth';
 import { collection, query } from 'firebase/firestore';
 import { ref, onMounted, onUnmounted } from 'vue';
-import { app, timestampChatFormat } from '@/configs';
+import { app, timestampChatFormat, truncateString,  } from '@/configs';
 
 const db = getFirestore(app);
 const isLoggedin = ref(false)
@@ -114,6 +155,37 @@ export default {
     toggleDropdown() {
       this.dropdownVisible = this.dropdownVisible === 'none' ? 'block' : 'none';
     },
+    getEachUSName(val) { //takes in id of friends
+      for (let i = 0; i < this.users.length; i++) {
+        if (this.users[i].id === val) {
+          return this.users[i].username
+        }
+
+      }
+    },
+
+    returnChatParticipants(participants) {
+      var totalParties = []
+      for (let i = 0 ; i < this.users.length; i++) {
+        if (String(participants).split(',').includes(this.users[i].id)) {
+          totalParties.push(this.users[i].username)
+        }
+      }
+
+      return totalParties.join(', ')
+
+
+
+    },
+    getEachUSNameusID(val) { //takes in id of friends
+      for (let i = 0; i < this.users.length; i++) {
+        if (this.users[i].userID === val) {
+          return this.users[i].username
+        }
+
+      }
+    },
+
 
     toggleAlert() {
       this.alertVisible = this.alertVisible === 'none' ? 'block' : 'none';
@@ -172,7 +244,8 @@ export default {
           dateCreated: doc.data().dateCreated,
           participants: doc.data().participants,
           latestMessage: doc.data().latestMessage,
-          timeUpdated: doc.data().timeUpdated
+          timeUpdated: doc.data().timeUpdated,
+          groupName: doc.data().groupName,
         }
       });
     });
@@ -181,6 +254,7 @@ export default {
     const liveUsers = onSnapshot(userQuery, (snapshot) => {
       this.users = snapshot.docs.map((doc) => {
         return {
+          id: doc.id,
           userID: doc.data().userID,
           username: doc.data().username,
           gender: doc.data().gender,
@@ -192,6 +266,7 @@ export default {
           userType: doc.data().userType,
           status: doc.data().status,
           friends: doc.data().friends,
+          requestSent: doc.data().requestSent
 
 
         }
@@ -285,4 +360,5 @@ p.from-them::after {
   color: rgba(33, 33, 45, 255);
   border: none;
   font-size: 1.1em
-}</style>
+}
+</style>
