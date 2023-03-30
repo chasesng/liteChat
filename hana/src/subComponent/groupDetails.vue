@@ -43,7 +43,7 @@
             <div class="f" style="justify-content:center;gap:5%">
             <button v-if="admin(groupID, getID(usID))" class="brButton" style="height:5vh;width:40vw;opacity:.9;font-size:.8em" @click="toggleCAdminDisplay()">Change Admin</button>
             <button v-if="admin(groupID, getID(usID))" class="brButton" style="height:5vh;width:40vw;background-color:crimson;opacity:.9;font-size:.8em" @click="toggledelAlert()">Delete Group</button>
-            <button v-if="!admin(groupID, getID(usID))" class="brButton" style="height:5vh;width:40vw;background-color:crimson;opacity:.9;font-size:.8em">Leave Group</button>
+            <button v-if="!admin(groupID, getID(usID))" class="brButton" style="height:5vh;width:40vw;background-color:crimson;opacity:.9;font-size:.8em" @click="toggleLAVisible()">Leave Group</button>
 
             </div>
             
@@ -129,7 +129,20 @@
               <button class="confirmOptions" @click="toggledelAlert()">Cancel</button>
 
             </div>
-          </div>
+    </div>
+
+    <div :style="{ display: leaveAlertVisible }"
+            style="opacity:.9;position:absolute;top:30vh;left:25vw;width:50vw;height:16vh;background-color:rgba(42,48,109,255);overflow:hidden">
+            <p class="wt ft p8 pd5">Leave Group</p>
+            <hr style="background-color:white;margin-top:-2.5vh;opacity:.3" />
+            <p class="wt ft p8 l">You will have to be added back again by the admin</p>
+            <div class="f" style="justify-content:space-evenly;background-color:white">
+
+              <button class="confirmOptions" @click="leaveGroup(groupID, getID(usID))">Confirm </button>
+              <button class="confirmOptions" @click="toggleLAVisible()">Cancel</button>
+
+            </div>
+    </div>
 </template>
 
 <script>
@@ -153,7 +166,8 @@ export default {
             tester: true,
             listOfAdded: [],
             originalList: [],
-            delAlertVisible: 'none'
+            delAlertVisible: 'none',
+            leaveAlertVisible: 'none'
         }
     },
     methods: {
@@ -196,6 +210,14 @@ export default {
             return totalParties.join(', ')
 
         },
+        leaveGroup(groupID, userid) {
+            if (!this.admin(groupID, userid)) {
+                updateDoc(doc(db, 'chats', groupID), {
+                    participants: arrayRemove(userid)
+                })
+                this.$router.push({ path: '/' })
+            }
+        },
     
         updateList() {
             this.listOfAdded = []
@@ -204,7 +226,10 @@ export default {
                 this.listOfAdded.push( button.value)
             });
         },
+        toggleLAVisible() {
+            this.leaveAlertVisible = this.leaveAlertVisible === 'none' ? 'block' : 'none';
 
+        },
         toggleCAdminDisplay() {
             this.toggleCAVisible = this.toggleCAVisible === 'none' ? 'block' : 'none';
         },

@@ -14,8 +14,8 @@
                   style="width:100vw;font-size:.8em"> You cannot change this later</span></label>
               <input id="fullname" class="inpClear inp wt" style="width:100vw" type="text" @focus="changeLabelColor(4)"
                 @blur="resetLabelColor(4)" placeholder="Username" v-model="username" />
-                <!-- <div v-if="checkUsername(username) && username.length >=4" class="l p9" style="color:green;margin-left:1%;">Username is available</div>
-                <div v-else-if="checkUsername(username) != true && username.length >= 4" class="l p9" style="color:red;font-size:.7em;line-height:1;margin-top:2%">Username cannot have spaces / special characters<br/>/<br/>Username in use</div> -->
+              <div v-if="validateUsername(username) && username.length >=4" class="l p9" style="color:green;margin-left:1%;">Username is available</div>
+                <div v-else-if="validateUsername(username) != true && username.length >= 4" class="l p9" style="color:red;font-size:.7em;line-height:1;margin-top:2%">Username cannot have spaces / special characters<br/>/<br/>Username in use</div>
             </div>
 
             <div class="ib" style="margin-top:3vh">
@@ -90,7 +90,6 @@ import { createUserWithEmailAndPassword, getAuth } from '@firebase/auth'
 import { useRouter } from 'vue-router';
 import { getFirestore, addDoc, collection } from '@firebase/firestore';
 import { app } from '@/configs'
-const db = getFirestore(app);
 
 const email = ref('')
 const password = ref('')
@@ -241,6 +240,11 @@ const register = () => {
 </script>
 
 <script>
+import { onSnapshot } from 'firebase/firestore';
+import { query } from 'firebase/firestore';
+// import { ref, onUnmounted,onMounted } from 'vue';
+import { onUnmounted } from 'vue';
+const db = getFirestore(app);
 
 
 export default {
@@ -257,12 +261,26 @@ export default {
       confirmPassword: '',
       identityTypeLabel: "NRIC",
       labelColors: ["gray", "gray"],
-
+      users: ref([])
     }
   },
 
   methods: {
-
+    validateUsername(input) {
+      var availableUsername = true;
+      const regex = /^(?=[a-zA-Z0-9._]{5,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
+      if (!regex.test(input) === true) {
+        return false
+      }
+      else {
+        for (let i = 0; i < this.users.length; i++) {
+          if (String(input).toLowerCase() === this.users[i].username.toLowerCase()) {
+            availableUsername = false;
+          }
+        }
+        return availableUsername
+      }
+    },
 
     changeLabelColor(index) {
       this.labelColors[index] = "black";
@@ -280,6 +298,31 @@ export default {
       alert("Success" + JSON.stringify(this.userForm));
     },
 
+  },
+  mounted() {
+    const userQuery = query(collection(db, "users"));
+    const liveUsers = onSnapshot(userQuery, (snapshot) => {
+      this.users = snapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          userID: doc.data().userID,
+          username: doc.data().username,
+          gender: doc.data().gender,
+          age: doc.data().age,
+          assignmentArray: doc.data().assignmentArray,
+          from: doc.data().from,
+          occupation: doc.data().occupation,
+          email: doc.data().emailRef,
+          userType: doc.data().userType,
+          status: doc.data().status,
+          friends: doc.data().friends,
+          requestSent: doc.data().requestSent
+
+
+        }
+      });
+    })
+    onUnmounted(liveUsers)
   }
 };
 
@@ -289,8 +332,6 @@ export default {
 
 
 <style>
-
-
 .signUpLabel {
 
   text-transform: uppercase;
@@ -363,4 +404,5 @@ li {
 
 li:hover {
   color: rgb(25, 17, 11);
-}</style>
+}
+</style>

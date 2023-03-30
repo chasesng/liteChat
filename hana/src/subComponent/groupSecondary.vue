@@ -9,12 +9,9 @@
             <div v-for="(user, index) in users.filter(user => user.userID === usID)" :key="index" style="height:35vh;overflow-x:hidden;overflow-y:scroll">
                 <div v-for="(friend, index) in user.friends" :key="index"
                     style="height:7vh;width:100vw;background-color:rgba(128,128,128,.1);text-align:left;padding-left:3vw;border-bottom:1px solid black;margin-bottom:2%">
-                    <!-- <div style="line-height:.3;display:flex;justify-content:space-between">
-                        <label for="" class="wt b p8" style="padding-top:4%">{{ getEachUSName(friend)[0] }}</label>
-                    </div> -->
                     <label class="f" style="width:95vw;justify-content:space-between">
                         <p class="wt pd5">{{ getEachUSName(friend)[0] }}</p>
-                        <input type="checkbox" style="width:3vh;margin-top:-2vh" :value="friend" @click="updatelist()" >
+                        <input type="checkbox" style="width:3vh;vertical-align: middle;" :value="friend" @click="updatelist()" >
                     </label>
 
 
@@ -154,4 +151,5 @@ onMounted(() => {
 
 </script>
 
-<style></style>
+<style scoped>
+</style>

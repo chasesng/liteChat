@@ -15,7 +15,7 @@
 
         <div v-for="(user, index) in users.filter(user => user.userID === ProfileID)" :key="index" style="margin-top:2vh">
             <div class="ib">
-                <div class="cntr" style="width:20vw;height:10vh;background-color:whitesmoke;margin-bottom:2%;opacity:.8">
+                <div class="cntr" style="width:20vw;height:9vh;background-color:transparent;border: 1px solid white;margin-bottom:2%;opacity:.8">
                 </div>
                 <br />
                 <div class="f" style="justify-content:center;width:100vw">
